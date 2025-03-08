@@ -26,17 +26,21 @@ namespace Movies.Api.Controllers
             { 
                 Genres = movie.Genres, 
                 Id = movie.Id, 
+                Slug = movie.GetSlug(),
                 Title = movie.Title, 
                 YearOfRelease = movie.YearOfRelease 
             };
 
-            return CreatedAtAction(nameof(Get), new { id = movie.Id }, movie);
+            return CreatedAtAction(nameof(Get), new { idOrSlug = movie.Id }, movie);
         }
 
         [HttpGet(ApiEndpoints.Movies.Get)]
-        public async Task<IActionResult> Get([FromRoute] Guid id)
+        public async Task<IActionResult> Get([FromRoute] string idOrSlug)
         {
-            var movie = await _movieRepository.GetByIdAsync(id);
+            var movie = Guid.TryParse(idOrSlug, out var id)
+                ? await _movieRepository.GetByIdAsync(id)
+                : await _movieRepository.GetBySlugAsync(idOrSlug);
+                
             if (movie is null)
             {
                 return NotFound();

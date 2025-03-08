@@ -23,6 +23,7 @@ namespace Movies.Api.Mapping
             {
                 Genres = movie.Genres,
                 Id = movie.Id,
+                Slug = movie.GetSlug(),
                 Title = movie.Title,
                 YearOfRelease = movie.YearOfRelease
             };
