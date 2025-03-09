@@ -10,10 +10,10 @@ namespace Movies.Application.Models
     public class Movie
     {
         public required Guid Id { get; init; }
-        public required string Title { get; set; }
+        public required string Title { get; init; }
         public string Slug => GetSlug();
-        public required int YearOfRelease { get; set; }
-        public required List<string> Genres { get; set; } = [];
+        public required int YearOfRelease { get; init; }
+        public required List<string> Genres { get; init; } = [];
 
         public string GetSlug()
         {

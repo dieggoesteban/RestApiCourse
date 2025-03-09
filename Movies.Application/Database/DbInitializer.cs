@@ -24,18 +24,25 @@ namespace Movies.Application.Database
                 CREATE TABLE IF NOT EXISTS Movies
                 (
                     Id UUID PRIMARY KEY,
-                    Title TEXT NOT NULL,
                     Slug TEXT NOT NULL,
+                    Title TEXT NOT NULL,
                     YearOfRelease INTEGER NOT NULL
                 );
-                """
-            );
+            """);
 
             // Index creation for slug
             await connection.ExecuteAsync("""
                 CREATE UNIQUE INDEX IF NOT EXISTS Movies_Slug_Index
                 ON Movies
                 USING btree(slug)
+            """);
+
+            await connection.ExecuteAsync("""
+                CREATE TABLE IF NOT EXISTS Genres
+                (
+                    MovieId UUID references Movies(Id),
+                    Name TEXT NOT NULL
+                );
             """);
         }
     }

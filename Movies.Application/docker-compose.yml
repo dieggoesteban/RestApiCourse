@@ -1,14 +1,23 @@
 
 services:
-
-  db:
-    image: postgres
+  postgres:
+    image: postgres:latest
+    container_name: postgres_test
     restart: always
-    shm_size: 128mb
     environment:
-        POSTGRES_USER: webapicourse
-        POSTGRES_PASSWORD: mypassword
-        POSTGRES_DB: movies
+      POSTGRES_USER: webapicourse
+      POSTGRES_PASSWORD: mypassword
+      POSTGRES_DB: movies
     ports:
-        - '5432:5432'
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 8081:8080
+
+volumes:
+  postgres_data:
 
