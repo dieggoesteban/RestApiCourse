@@ -34,7 +34,10 @@ namespace Movies.Api
                 };
             });
 
-            builder.Services.AddAuthorization();
+            builder.Services.AddAuthorization(x =>
+            {
+                x.AddPolicy(AuthConstants.AdminUserPolicyName, policy => policy.RequireClaim(AuthConstants.AdminUserClaimName, "true"));
+            });
 
             builder.Services.AddControllers();
             // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
