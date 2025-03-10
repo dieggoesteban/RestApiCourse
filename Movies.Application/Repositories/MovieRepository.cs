@@ -67,27 +67,26 @@ namespace Movies.Application.Repositories
         {
             using var connection = await _dbConnectionFactory.CreateConnectionAsync();
 
-            var result = await connection.QueryAsync<Movie, string, Movie>(
+            var result = await connection.QueryAsync(
                 new CommandDefinition("""
-                    select m.*, g.name as Genre
-                    from movies m
-                    left join genres g on g.MovieId = m.Id
-                 """),
-                (movie, genre) =>
-                {
-                    movie.Genres.Add(genre);
-                    return movie;
-                },
-                splitOn: "Genre"
+                SELECT 
+                m.*, 
+                    STRING_AGG(g.name, ',') AS Genres
+                FROM movies m
+                LEFT JOIN genres g ON g.MovieId = m.Id
+                GROUP BY m.Id
+             """)
             );
 
-            if (result is null)
+            return result.Select(x => new Movie
             {
-                return Enumerable.Empty<Movie>();
-            }
-
-            return result;
+                Id = x.id,
+                Title = x.title,
+                YearOfRelease = x.yearofrelease,
+                Genres = Enumerable.ToList(x.genres.Split(','))
+            });
         }
+
 
 
         public async Task<Movie?> GetByIdAsync(Guid id)
