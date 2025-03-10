@@ -24,7 +24,7 @@ namespace Movies.Api
             {
                 x.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
                 {
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["Jwt:Key"]!)),
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["Movies:JwtKey"]!)),
                     ValidateIssuerSigningKey = true,
                     ValidateLifetime = true,
                     ValidIssuer = configuration["Jwt:Issuer"],
@@ -40,7 +40,7 @@ namespace Movies.Api
             // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
             builder.Services.AddOpenApi();
             builder.Services.AddApplication();
-            builder.Services.AddDatabase(configuration["Database:ConnectionString"]!);
+            builder.Services.AddDatabase(configuration["Movies:ConnectionString"]!);
 
             var app = builder.Build();
 
