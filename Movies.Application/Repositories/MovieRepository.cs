@@ -79,7 +79,7 @@ namespace Movies.Application.Repositories
                 LEFT JOIN ratings r ON r.MovieId = m.Id
                 LEFT JOIN ratings myr ON myr.MovieId = m.Id and myr.UserId = @userId
              
-                GROUP BY m.Id
+                GROUP BY m.Id, myr.rating
              """, new { userId }, cancellationToken: token)
             );
 

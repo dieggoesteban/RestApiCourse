@@ -46,7 +46,7 @@ namespace Movies.Application.Database
             """);
 
             await connection.ExecuteAsync("""
-                CREATE TABLE IF NOT EXITS Ratings
+                CREATE TABLE IF NOT EXISTS Ratings
                 (
                     UserId UUID,
                     MovieId UUID references Movies(Id),
