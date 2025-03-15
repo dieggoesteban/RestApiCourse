@@ -78,8 +78,7 @@ namespace Movies.Application.Repositories
                 LEFT JOIN genres g ON g.MovieId = m.Id   
                 LEFT JOIN ratings r ON r.MovieId = m.Id
                 LEFT JOIN ratings myr ON myr.MovieId = m.Id and myr.UserId = @userId
-             
-                GROUP BY m.Id, myr.rating
+                GROUP BY Id, UserRating
              """, new { userId }, cancellationToken: token)
             );
 
