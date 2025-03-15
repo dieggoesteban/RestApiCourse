@@ -67,8 +67,17 @@ namespace Movies.Application.Repositories
         {
             using var connection = await _dbConnectionFactory.CreateConnectionAsync(token);
 
+            var orderClause = string.Empty;
+            if (options.SortField is not null)
+            {
+                orderClause = $"""
+                    ,m.{options.SortField} 
+                    ORDER BY {options.SortField} {(options.SortOrder == SortOrder.Ascending ? "ASC" : "DESC")}
+                """;
+            }
+
             var result = await connection.QueryAsync(
-                new CommandDefinition("""
+                new CommandDefinition($"""
                 SELECT 
                     m.*, 
                     STRING_AGG(distinct g.name, ',') AS Genres,
@@ -78,9 +87,9 @@ namespace Movies.Application.Repositories
                 LEFT JOIN genres g ON g.MovieId = m.Id   
                 LEFT JOIN ratings r ON r.MovieId = m.Id
                 LEFT JOIN ratings myr ON myr.MovieId = m.Id and myr.UserId = @userId
-                WHERE (@title IS NULL OR m.Title LIKE '%' || @title || '%')
+                WHERE (@title IS NULL OR LOWER(m.Title) LIKE '%' || LOWER(@title) || '%')
                     AND (@yearofrelease IS NULL OR m.YearOfRelease = @yearofrelease)
-                GROUP BY Id, UserRating
+                GROUP BY Id, UserRating {orderClause}
              """, new 
                 { 
                     userId = options.UserId, 
