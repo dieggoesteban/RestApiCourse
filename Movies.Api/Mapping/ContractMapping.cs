@@ -49,5 +49,24 @@ namespace Movies.Api.Mapping
                 Genres = request.Genres.ToList()
             };
         }
+
+        public static GetAllMoviesOptions MapToOptions(this GetAllMoviesRequest request)
+        {
+            return new GetAllMoviesOptions
+            {
+                Title = request.Title,
+                YearOfRelease = request.YearOfRelease
+            };
+        }
+
+        public static GetAllMoviesOptions WithUser(this GetAllMoviesOptions options, Guid? userId)
+        {
+            return new GetAllMoviesOptions
+            {
+                Title = options.Title,
+                YearOfRelease = options.YearOfRelease,
+                UserId = userId
+            };
+        }
     }
 }

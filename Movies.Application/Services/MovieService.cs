@@ -1,6 +1,7 @@
 ﻿using FluentValidation;
 using Movies.Application.Models;
 using Movies.Application.Repositories;
+using Movies.Application.Validators;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,11 +12,13 @@ namespace Movies.Application.Services
 {
     public class MovieService(IMovieRepository movieRepository, 
         IValidator<Movie> movieValidator,
-        IRatingRepository ratingRepository) : IMovieService
+        IRatingRepository ratingRepository,
+        IValidator<GetAllMoviesOptions> optionsValidator) : IMovieService
     {
         private readonly IMovieRepository _movieRepository = movieRepository;
         private readonly IValidator<Movie> _movieValidator = movieValidator;
         private readonly IRatingRepository _ratingRepository = ratingRepository;
+        private readonly IValidator<GetAllMoviesOptions> _optionsValidator = optionsValidator;
 
         public async Task<bool> CreateAsync(Movie movie, CancellationToken token = default)
         {
@@ -28,9 +31,10 @@ namespace Movies.Application.Services
             return _movieRepository.DeleteByIdAsync(id, token);
         }
 
-        public Task<IEnumerable<Movie>> GetAllAsync(Guid? userId = default, CancellationToken token = default)
+        public async Task<IEnumerable<Movie>> GetAllAsync(GetAllMoviesOptions options, CancellationToken token = default)
         {
-            return _movieRepository.GetAllAsync(userId, token);
+            await _optionsValidator.ValidateAndThrowAsync(options);
+            return await _movieRepository.GetAllAsync(options, token);
         }
 
         public Task<Movie?> GetByIdAsync(Guid id, Guid? userId = default, CancellationToken token = default)
