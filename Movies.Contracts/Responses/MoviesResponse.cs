@@ -6,8 +6,7 @@ using System.Threading.Tasks;
 
 namespace Movies.Contracts.Responses
 {
-    public class MoviesResponse
+    public class MoviesResponse : PagedResponse<MovieResponse>
     {
-        public required List<MovieResponse> Items { get; init; } = [];
     }
 }

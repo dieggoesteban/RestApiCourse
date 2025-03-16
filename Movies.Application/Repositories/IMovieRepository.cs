@@ -17,5 +17,6 @@ namespace Movies.Application.Repositories
         Task<bool> UpdateAsync(Movie movie, CancellationToken cancellationToken = default);
         Task<bool> DeleteByIdAsync(Guid id, CancellationToken cancellationToken = default);
         Task<bool> ExistsAsync(Guid id, CancellationToken cancellationToken = default);
+        Task<int> GetCountAsync(string? title, int? yearOfRelease, CancellationToken cancellationToken = default); //TODO: title y yearOfRelease deberían ser dinámicos?
     }
 }

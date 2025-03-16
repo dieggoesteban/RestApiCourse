@@ -21,6 +21,9 @@ namespace Movies.Application.Validators
             RuleFor(x => x.YearOfRelease).LessThanOrEqualTo(DateTime.UtcNow.Year);
             RuleFor(x => x.SortField).Must(x => x is null || ValidSortFields.Contains(x, StringComparer.OrdinalIgnoreCase))
                 .WithMessage($"Valid sort fields are: {string.Join(", ", ValidSortFields)}");
+            RuleFor(x => x.Page).GreaterThanOrEqualTo(1);
+            RuleFor(x => x.PageSize).InclusiveBetween(1, 15)
+                .WithMessage("Page size must be between 1 and 15.");
         }
     }
 }
