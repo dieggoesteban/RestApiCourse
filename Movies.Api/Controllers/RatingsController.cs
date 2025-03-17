@@ -20,6 +20,8 @@ namespace Movies.Api.Controllers
 
         [Authorize]
         [HttpPut(ApiEndpoints.Movies.Rate)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> RateMovie([FromRoute] Guid id,
             [FromBody] RateMovieRequest request, CancellationToken token = default)
         {
