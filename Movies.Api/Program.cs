@@ -5,6 +5,7 @@ using Movies.Api.Auth;
 using Movies.Api.Mapping;
 using Movies.Application;
 using Movies.Application.Database;
+using Scalar.AspNetCore;
 using System.Text;
 
 namespace Movies.Api
@@ -47,11 +48,15 @@ namespace Movies.Api
                 x.AssumeDefaultVersionWhenUnspecified = true;
                 x.ReportApiVersions = true;
                 x.ApiVersionReader = new MediaTypeApiVersionReader("api-version");
-            }).AddMvc();
+            })
+            .AddMvc();
 
             builder.Services.AddControllers();
             // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
-            builder.Services.AddOpenApi();
+            builder.Services.AddOpenApi("v1", options =>
+            {
+                options.AddDocumentTransformer<BearerSecuritySchemeTransformer>();
+            });
             builder.Services.AddApplication();
             builder.Services.AddDatabase(configuration["Movies:ConnectionString"]!);
 
@@ -61,6 +66,12 @@ namespace Movies.Api
             if (app.Environment.IsDevelopment())
             {
                 app.MapOpenApi();
+                app.MapScalarApiReference(options =>
+                {
+                    options.Theme = ScalarTheme.Mars;
+                    options.WithTitle("Movies API Reference")
+                           .WithSidebar(true);
+                }); 
             }
 
             app.UseHttpsRedirection();
