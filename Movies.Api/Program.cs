@@ -2,6 +2,7 @@ using Asp.Versioning;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Movies.Api.Auth;
+using Movies.Api.Health;
 using Movies.Api.Mapping;
 using Movies.Application;
 using Movies.Application.Database;
@@ -51,6 +52,7 @@ namespace Movies.Api
             })
             .AddMvc();
 
+            builder.Services.AddHealthChecks().AddCheck<DatabaseHealthCheck>(DatabaseHealthCheck.Name);
             builder.Services.AddControllers();
             // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
             builder.Services.AddOpenApi("v1", options =>
@@ -74,8 +76,8 @@ namespace Movies.Api
                 }); 
             }
 
+            app.MapHealthChecks("_health");
             app.UseHttpsRedirection();
-
             app.UseAuthentication();
             app.UseAuthorization();
 
